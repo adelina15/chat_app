@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ChatApp</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="please_enter_your_phone_number_to_log_in">Please enter your phone number to log in</string>
+    <string name="_996xxxxxxxxx">+996xxxxxxxxx</string>
+    <string name="continue_text">Continue</string>
+    <string name="submit">Submit</string>
+    <string name="code">Code</string>
+    <string name="please_enter_the_verification_code_from_sms">Please enter the verification code from SMS</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="view_all_contacts">View all contacts</string>
+</resources>
