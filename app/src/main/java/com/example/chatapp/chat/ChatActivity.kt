@@ -18,11 +18,15 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         val user: User = intent.getSerializableExtra("user") as User
+        var chat: Chat = intent.getSerializableExtra("chat") as Chat
+        if(chat == null){
+            chat = Chat()
+            val userIds = ArrayList<String>()
+            userIds.add(FirebaseAuth.getInstance().uid.toString())
+            userIds.add(user.id)
+            chat = Chat(userIds = userIds)
+        }
 
-        val userIds = ArrayList<String>()
-        userIds.add(FirebaseAuth.getInstance().uid.toString())
-        userIds.add(user.id)
-        chat = Chat(userIds = userIds)
         binding.sendButton.setOnClickListener{
             onClickSend()
         }
