@@ -1,4 +1,4 @@
-package com.example.chatapp.contacts
+package com.example.chatapp
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,22 +7,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.example.chatapp.databinding.ListUserBinding
 import com.example.chatapp.interfaces.Delegates
+import com.example.chatapp.models.Chat
 import com.example.chatapp.models.User
 
-class ContactsAdapter(private val itemClicker: Delegates.RecyclerItemClicked) :
-    RecyclerView.Adapter<ContactsAdapter.ItemHolder>() {
+class ChatAdapter(private val itemClicker: Delegates.RecyclerItemClicked): RecyclerView.Adapter<ChatAdapter.ItemHolder>()  {
 
-    private var list = listOf<User>()
-    fun setUser(list: List<User>) {
-        this.list = list
+    private var list = listOf<Chat>()
+    fun setUser(list: List<Chat>){
+    this.list = list
         notifyDataSetChanged()
     }
 
     class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ListUserBinding.bind(itemView)
 
-        fun bind(user: User) = with(binding) {
-            txtView.text = user.name
+        fun bind(chat: Chat) = with(binding){
+            txtView.text = chat.id
         }
     }
 

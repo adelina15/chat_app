@@ -5,14 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.chatapp.ChatActivity
+import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
 import com.example.chatapp.databinding.ActivityContactsBinding
 import com.example.chatapp.interfaces.Delegates
 import com.example.chatapp.models.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import java.text.FieldPosition
 
 class ContactsActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
     lateinit var binding: ActivityContactsBinding

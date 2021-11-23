@@ -9,4 +9,5 @@
     <string name="please_enter_the_verification_code_from_sms">Please enter the verification code from SMS</string>
     <string name="verification_code">Verification Code</string>
     <string name="view_all_contacts">View all contacts</string>
+    <string name="default_notification_channel_id">Blabla</string>
 </resources>

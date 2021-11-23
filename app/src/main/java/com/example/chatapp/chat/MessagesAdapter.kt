@@ -1,4 +1,4 @@
-package com.example.chatapp.contacts
+package com.example.chatapp.chat
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.example.chatapp.databinding.ListUserBinding
 import com.example.chatapp.interfaces.Delegates
+import com.example.chatapp.models.Message
 import com.example.chatapp.models.User
 
-class ContactsAdapter(private val itemClicker: Delegates.RecyclerItemClicked) :
-    RecyclerView.Adapter<ContactsAdapter.ItemHolder>() {
+class MessagesAdapter(): RecyclerView.Adapter<MessagesAdapter.ItemHolder>()  {
 
-    private var list = listOf<User>()
-    fun setUser(list: List<User>) {
+    private var list = listOf<Message>()
+    fun setMessage(list: List<Message>){
         this.list = list
         notifyDataSetChanged()
     }
@@ -21,8 +21,8 @@ class ContactsAdapter(private val itemClicker: Delegates.RecyclerItemClicked) :
     class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ListUserBinding.bind(itemView)
 
-        fun bind(user: User) = with(binding) {
-            txtView.text = user.name
+        fun bind(message: Message) = with(binding){
+            txtView.text = message.text
         }
     }
 
@@ -33,9 +33,6 @@ class ContactsAdapter(private val itemClicker: Delegates.RecyclerItemClicked) :
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.bind(list[position])
-        holder.binding.layout.setOnClickListener {
-            itemClicker.onItemClick(position)
-        }
     }
 
     override fun getItemCount(): Int {
