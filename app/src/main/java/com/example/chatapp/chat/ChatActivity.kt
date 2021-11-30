@@ -1,12 +1,9 @@
 package com.example.chatapp.chat
 
-
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,19 +15,19 @@ import com.example.chatapp.models.Message
 import com.example.chatapp.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import java.sql.Ref
 import java.util.*
 
 class ChatActivity : AppCompatActivity() {
     lateinit var binding: ActivityChatBinding
     private var chat: Chat? = null
     private var user: User? = null
-    private val myId: String = FirebaseAuth.getInstance().uid.toString()
+    private val myId = FirebaseAuth.getInstance().uid
     private val messageList = ArrayList<Message>()
-    private val adapter by lazy { MessagesAdapter(this, messageList) }
+    private val adapter by lazy { MessagesAdapter(this) }
+    private var chatExist: Boolean = false
 
-//    val userIds = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,21 +37,30 @@ class ChatActivity : AppCompatActivity() {
 
         supportActionBar?.title = user?.name
 
-//        userIds.add(FirebaseAuth.getInstance().uid.toString())
-//        userIds.add(user!!.id)
-//
-//        FirebaseFirestore.getInstance().collection("chats")
-//            .whereArrayContains("userIds", userIds)
-
         if (chat == null) {
-            chat = Chat()
-            val userIds = ArrayList<String>()
-            userIds.add(FirebaseAuth.getInstance().uid.toString())
-            userIds.add(user!!.id)
-            chat?.userIds = userIds
-        } else {
-            init()
+            Toast.makeText(this, "chat == null", Toast.LENGTH_SHORT).show()
+            val userIds: ArrayList<String> = ArrayList()
+            userIds.add(user?.id.toString())
+            userIds.add(myId.toString())
+            Log.i("TAG", "User ids $userIds")
+            if (!exist(userIds)) {
+                Toast.makeText(this, "userIds !exist", Toast.LENGTH_SHORT).show()
+                chat = Chat()
+                chat!!.userIds = userIds
+                supportActionBar?.title = user?.name
+            }
+        } else if (user == null) {
+            Toast.makeText(this, "user == null", Toast.LENGTH_SHORT).show()
             getMessages()
+            init()
+            FirebaseFirestore.getInstance().collection("users")
+                .document(chat?.userIds?.get(0).toString())
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    user = documentSnapshot.toObject(User::class.java)
+                    assert(user != null)
+                    supportActionBar?.title = user?.name
+                }
         }
 
         binding.sendButton.setOnClickListener {
@@ -63,9 +69,34 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
+    private fun exist(userIds: ArrayList<String>): Boolean {
+
+        FirebaseFirestore.getInstance().collection("chats")
+            .whereEqualTo("userIds", userIds)
+            .get()
+            .addOnSuccessListener { snapshots ->
+                Log.i("TAG", "success: $chatExist ")
+                if (snapshots != null) {
+                    chatExist = true
+                    Log.i("TAG", "exist true $chatExist")
+                    for (snapshot in snapshots) {
+                        chat = snapshot.toObject(Chat::class.java)
+                        chat?.id = snapshot.id
+                    }
+                }
+            }
+            .addOnFailureListener {
+                chatExist = false
+                Log.i("TAG", "failure: $chatExist ")
+            }
+        Log.i("TAG", "end :$chatExist " )
+        return chatExist
+    }
+
     private fun getMessages() {
         FirebaseFirestore.getInstance().collection("chats").document(chat?.id.toString())
             .collection("messages")
+            .orderBy("time")
             .addSnapshotListener { value, error ->
                 for (change in value!!.documentChanges) {
                     when (change.type) {
@@ -82,7 +113,7 @@ class ChatActivity : AppCompatActivity() {
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(this@ChatActivity)
             rcView.adapter = adapter
-//            adapter.setMessage(messageList)
+            adapter.setMessage(messageList)
         }
     }
 
@@ -90,44 +121,40 @@ class ChatActivity : AppCompatActivity() {
         val messageText = binding.message.text.toString()
         if (chat?.id == null) {
             createChat(messageText)
-        } else {
-            sendMessage2(messageText)
+        }
+        else {
+            sendMessage(messageText)
         }
     }
 
+
     private fun createChat(text: String) {
-        FirebaseFirestore.getInstance().collection("chats").add(chat!!).addOnSuccessListener {
-            chat?.id = it.id
-            Toast.makeText(applicationContext, "send message in a new chat", Toast.LENGTH_SHORT)
-                .show()
-            sendMessage2(text)
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+        Toast.makeText(this, "created chat", Toast.LENGTH_SHORT).show()
+        val map: MutableMap<String, Any> = HashMap()
+        map["userIds"] = chat?.userIds!!
+        FirebaseFirestore.getInstance().collection("chats")
+            .add(map)
+            .addOnSuccessListener { documentReference ->
+                chat?.id = (documentReference.id)
+                sendMessage(text)
+                getMessages()
+                init()
+                startActivity(Intent(this, MainActivity::class.java))
+            }
     }
 
     private fun sendMessage(text: String) {
-        val map = hashMapOf<String, Any>()
+        Toast.makeText(this, "send message", Toast.LENGTH_SHORT).show()
+        val map: MutableMap<String, Any> = HashMap()
         map["text"] = text
-        map["senderId"] = myId
-        FirebaseFirestore.getInstance().collection("chats")
-            .document(chat?.id!!)
-            .collection("messages")
-            .add(map)
-        Toast.makeText(applicationContext, "send message in existing chat", Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun sendMessage2(text: String) {
-        Log.i("MyTag", "SendMessage")
-        var map: MutableMap<String, Any> = HashMap()
-        map["text"] = text
-        map["senderId"] = myId
+        map["senderId"] = myId.toString()
 //        map["isRead"] = false
-//        map["time"] = Calendar.getInstance().timeInMillis
+        map["time"] = FieldValue.serverTimestamp()
 
         FirebaseFirestore.getInstance().collection("chats").document(chat?.id!!)
             .collection("messages")
             .add(map)
         binding.message.setText("")
+        binding.rcView.scrollToPosition(adapter.itemCount - 1)
     }
 }

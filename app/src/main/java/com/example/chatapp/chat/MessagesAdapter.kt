@@ -1,6 +1,8 @@
 package com.example.chatapp.chat
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,40 +15,52 @@ import com.example.chatapp.interfaces.Delegates
 import com.example.chatapp.models.Message
 import com.example.chatapp.models.User
 import com.google.firebase.auth.FirebaseAuth
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-class MessagesAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class MessagesAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
 
 
-//    private var list = listOf<Message>()
-//    fun setMessage(list: List<Message>) {
-//        this.list = list
-//        notifyDataSetChanged()
-//    }
+    private var messageList = ArrayList<Message>()
+    fun setMessage(messageList: ArrayList<Message>) {
+        this.messageList = messageList
+        notifyDataSetChanged()
+    }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding = SentBinding.bind(itemView)
-        fun bind(message: Message) = with(binding){
-            sentMessage.text = message.text
+        @SuppressLint("SetTextI18n")
+        fun bind(message: Message){
+            binding.sentMessage.text = message.text
+            val cal = Calendar.getInstance()
+            cal.time = message.time.toDate()
+            binding.sentTime.text = "${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}"
         }
     }
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val binding = ReceiveBinding.bind(itemView)
-        fun bind(message: Message) = with(binding){
-            receivedMessage.text = message.text
+        @SuppressLint("SetTextI18n")
+        fun bind(message: Message) {
+            binding.receivedMessage.text = message.text
+            val cal = Calendar.getInstance()
+            cal.time = message.time.toDate()
+            binding.receivedMessage.text = "${cal.get(Calendar.HOUR_OF_DAY)}: ${cal.get(Calendar.MINUTE)}"
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == 1){
+        return if (viewType == 1){
             val view = LayoutInflater.from((parent.context)).inflate(R.layout.receive, parent, false)
-            return ReceiveViewHolder(view)
+            ReceiveViewHolder(view)
         } else{
             val view = LayoutInflater.from((parent.context)).inflate(R.layout.sent, parent, false)
-            return SentViewHolder(view)
+            SentViewHolder(view)
         }
     }
 

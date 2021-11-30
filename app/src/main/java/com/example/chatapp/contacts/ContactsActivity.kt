@@ -21,6 +21,7 @@ class ContactsActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
 
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
+        supportActionBar?.title = "Contacts"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts)
         init()
         getContacts()

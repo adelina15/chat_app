@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -9,16 +9,27 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/outline">
+            android:layout_marginRight="40dp"
+            android:background="@drawable/outline"
+            android:paddingLeft="12dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/received_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:text="This is received message"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/received_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/received_message"
+                android:text="22:17"
+                android:textSize="12sp" />
 
         </RelativeLayout>
     </RelativeLayout>
