@@ -45,13 +45,13 @@ class MainActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
                 for (change: DocumentChange in value!!.documentChanges){
                     when(change.type){
                         DocumentChange.Type.ADDED -> run {
-                            var chat: Chat = change.document.toObject(Chat::class.java)
+                            val chat: Chat = change.document.toObject(Chat::class.java)
                             chat.id = change.document.id
                             chatList.add(chat)
                         }
                     }
-                    adapter.notifyDataSetChanged()
                 }
+                adapter.notifyDataSetChanged()
             }
 //            .addOnSuccessListener {
 //                for (snapshot in it){
@@ -76,10 +76,8 @@ class MainActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(this, "Message", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("chat", chatList[position])
-//        intent.putExtra("user", FirebaseAuth.getInstance().uid )
         startActivity(intent)
     }
 }

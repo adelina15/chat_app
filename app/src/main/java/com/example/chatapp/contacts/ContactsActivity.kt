@@ -3,6 +3,7 @@ package com.example.chatapp.contacts
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatapp.chat.ChatActivity
@@ -10,6 +11,7 @@ import com.example.chatapp.R
 import com.example.chatapp.databinding.ActivityContactsBinding
 import com.example.chatapp.interfaces.Delegates
 import com.example.chatapp.models.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
 class ContactsActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
@@ -17,7 +19,7 @@ class ContactsActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
     private val userList: MutableList<User> = ArrayList()
     private val adapter by lazy { ContactsAdapter(this) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts)
         init()
@@ -41,7 +43,9 @@ class ContactsActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
                     if(user != null) {
                         user.id = snapshot.id
                     }
-                    userList.add(user!!)
+                    if (FirebaseAuth.getInstance().uid != user?.id) {
+                        userList.add(user!!)
+                    }
                 }
                 adapter.notifyDataSetChanged()
             }

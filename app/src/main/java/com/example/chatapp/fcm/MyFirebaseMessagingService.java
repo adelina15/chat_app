@@ -32,7 +32,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Log.e("TAG", "onNewToken: " + s);
-//        sendTokenToServer(s)
 
     }
 //

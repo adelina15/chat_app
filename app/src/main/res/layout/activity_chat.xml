@@ -14,8 +14,7 @@
             android:id="@+id/rcView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#DCEAEC">
+            android:layout_weight="1">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -31,8 +30,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Type your message"
+                android:inputType="textPersonName" />
 
             <ImageView
                 android:id="@+id/send_button"
