@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/drawable/filled.xml" value="0.2703125" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/drawable/ic_person_add.xml" value="0.25625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/drawable/ic_send.xml" value="0.2703125" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/drawable/outline.xml" value="0.2703125" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/activity_chat.xml" value="0.25416666666666665" />
@@ -13,8 +14,10 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/activity_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/list_user.xml" value="0.4" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/msg.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/notification.xml" value="0.6" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/receive.xml" value="0.4" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/sent.xml" value="0.4" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/ChatAPp/app/src/main/res/layout/single_chat.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

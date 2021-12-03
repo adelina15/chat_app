@@ -13,7 +13,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/filled"
-            android:paddingLeft="10dp"
+            android:paddingLeft="14dp"
             android:paddingTop="10dp"
             android:paddingRight="12dp">
 

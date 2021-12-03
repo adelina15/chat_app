@@ -14,8 +14,9 @@
             android:layout_margin="10dp"
             android:fontFamily="serif"
             android:text="Loading..."
-            android:textColor="@color/black"
-            android:textSize="34sp" />
+            android:textColor="@color/purple_500"
+            android:textSize="34sp"
+            android:textStyle="italic" />
 
         <View
             android:layout_width="match_parent"

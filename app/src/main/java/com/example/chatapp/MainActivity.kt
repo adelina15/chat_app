@@ -37,6 +37,11 @@ class MainActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
         getChats()
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyDataSetChanged()
+    }
+
     private fun getChats() {
         val uid = FirebaseAuth.getInstance().uid
         FirebaseFirestore.getInstance().collection("chats")
@@ -53,17 +58,6 @@ class MainActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
                 }
                 adapter.notifyDataSetChanged()
             }
-//            .addOnSuccessListener {
-//                for (snapshot in it){
-//                    val chat: Chat? = snapshot.toObject(Chat::class.java)
-//                    if(chat != null) {
-//                        chat.id = snapshot.id
-//                    }
-//                    chatList.add(chat!!)
-//                }
-//                adapter.notifyDataSetChanged()
-//
-//            }
     }
 
     private fun initList() {
@@ -80,4 +74,5 @@ class MainActivity : AppCompatActivity(), Delegates.RecyclerItemClicked {
         intent.putExtra("chat", chatList[position])
         startActivity(intent)
     }
+
 }

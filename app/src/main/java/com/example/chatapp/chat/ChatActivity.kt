@@ -13,10 +13,12 @@ import com.example.chatapp.databinding.ActivityChatBinding
 import com.example.chatapp.models.Chat
 import com.example.chatapp.models.Message
 import com.example.chatapp.models.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 
 class ChatActivity : AppCompatActivity() {
@@ -51,6 +53,7 @@ class ChatActivity : AppCompatActivity() {
             }
         } else if (user == null) {
             Toast.makeText(this, "user == null", Toast.LENGTH_SHORT).show()
+            isSeen()
             getMessages()
             init()
             FirebaseFirestore.getInstance().collection("users")
@@ -69,8 +72,13 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    private fun exist(userIds: ArrayList<String>): Boolean {
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyDataSetChanged()
+    }
 
+    private fun exist(userIds: ArrayList<String>): Boolean {
+        chatExist = false
         FirebaseFirestore.getInstance().collection("chats")
             .whereEqualTo("userIds", userIds)
             .get()
@@ -89,8 +97,27 @@ class ChatActivity : AppCompatActivity() {
                 chatExist = false
                 Log.i("TAG", "failure: $chatExist ")
             }
-        Log.i("TAG", "end :$chatExist " )
+        Log.i("TAG", "end :$chatExist ")
         return chatExist
+    }
+
+    private fun isSeen() {
+        val ids = chat?.userIds as MutableList
+        ids.remove(myId)
+        val userName = ids[0]
+
+        FirebaseFirestore.getInstance().collection("chats")
+            .document(chat?.id.toString())
+            .collection("messages")
+            .whereEqualTo("senderId", userName)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    for (doc in it.result!!) {
+                        doc.reference.update("isSeen", true)
+                    }
+                }
+            }
     }
 
     private fun getMessages() {
@@ -121,8 +148,7 @@ class ChatActivity : AppCompatActivity() {
         val messageText = binding.message.text.toString()
         if (chat?.id == null) {
             createChat(messageText)
-        }
-        else {
+        } else {
             sendMessage(messageText)
         }
     }
@@ -148,8 +174,8 @@ class ChatActivity : AppCompatActivity() {
         val map: MutableMap<String, Any> = HashMap()
         map["text"] = text
         map["senderId"] = myId.toString()
-//        map["isRead"] = false
-        map["time"] = FieldValue.serverTimestamp()
+        map["isSeen"] = false
+        map["time"] = Calendar.getInstance().timeInMillis
 
         FirebaseFirestore.getInstance().collection("chats").document(chat?.id!!)
             .collection("messages")
